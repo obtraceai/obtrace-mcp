@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"strings"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
@@ -51,24 +49,21 @@ func AllCategories() []Category {
 	}
 }
 
-// MustTool creates a Tool from a typed handler function. It panics if the handler
-// signature is invalid. The handler must be a function of the form:
+// MustTool creates a Tool from a typed handler function.
+// The type parameter T is used to auto-generate the JSON schema via invopop/jsonschema.
+//
+// The handler must be a function of the form:
 //
 //	func(ctx context.Context, params T) (*mcp.CallToolResult, error)
-//
-// where T is a struct whose fields are used to generate the JSON schema.
 func MustTool[T any](name, description string, handler func(ctx context.Context, params T) (*mcp.CallToolResult, error), opts ...mcp.ToolOption) Tool {
-	schema := generateSchema[T]()
-
-	allOpts := []mcp.ToolOption{mcp.WithToolInputSchema(schema)}
+	allOpts := []mcp.ToolOption{mcp.WithInputSchema[T]()}
 	allOpts = append(allOpts, opts...)
 
-	tool := mcp.NewTool(name, allOpts...)
-	tool.Description = description
+	tool := mcp.NewTool(name, description, allOpts...)
 
 	wrappedHandler := func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		var params T
-		data, err := json.Marshal(request.Params.Arguments)
+		data, err := json.Marshal(request.GetArguments())
 		if err != nil {
 			return nil, fmt.Errorf("marshaling arguments: %w", err)
 		}
@@ -98,83 +93,8 @@ func ConvertTool[T any, R any](name, description string, handler func(ctx contex
 			return nil, fmt.Errorf("marshaling result: %w", err)
 		}
 
-		return &mcp.CallToolResult{
-			Content: []mcp.Content{
-				mcp.TextContent{
-					Type: "text",
-					Text: string(data),
-				},
-			},
-		}, nil
+		return mcp.NewToolResultText(string(data)), nil
 	}, opts...)
-}
-
-// generateSchema generates a JSON schema from a struct type's tags.
-func generateSchema[T any]() mcp.ToolInputSchema {
-	schema := mcp.ToolInputSchema{
-		Type:       "object",
-		Properties: make(map[string]map[string]any),
-	}
-
-	var zero T
-	t := reflect.TypeOf(zero)
-	if t.Kind() == reflect.Ptr {
-		t = t.Elem()
-	}
-
-	for i := range t.NumField() {
-		field := t.Field(i)
-
-		jsonTag := field.Tag.Get("json")
-		if jsonTag == "" || jsonTag == "-" {
-			continue
-		}
-		name := strings.Split(jsonTag, ",")[0]
-
-		prop := make(map[string]any)
-
-		// Determine type from Go type
-		switch field.Type.Kind() {
-		case reflect.String:
-			prop["type"] = "string"
-		case reflect.Int, reflect.Int32, reflect.Int64:
-			prop["type"] = "integer"
-		case reflect.Float32, reflect.Float64:
-			prop["type"] = "number"
-		case reflect.Bool:
-			prop["type"] = "boolean"
-		case reflect.Slice:
-			prop["type"] = "array"
-			if field.Type.Elem().Kind() == reflect.String {
-				prop["items"] = map[string]any{"type": "string"}
-			}
-		default:
-			prop["type"] = "object"
-		}
-
-		// jsonschema tag for description and enum
-		if jsTag := field.Tag.Get("jsonschema"); jsTag != "" {
-			parts := strings.Split(jsTag, ",")
-			for _, part := range parts {
-				part = strings.TrimSpace(part)
-				if strings.HasPrefix(part, "description=") {
-					prop["description"] = strings.TrimPrefix(part, "description=")
-				} else if strings.HasPrefix(part, "enum=") {
-					enumStr := strings.TrimPrefix(part, "enum=")
-					prop["enum"] = strings.Split(enumStr, "|")
-				}
-			}
-		}
-
-		schema.Properties[name] = prop
-
-		// Check required tag
-		if reqTag := field.Tag.Get("required"); reqTag == "true" {
-			schema.Required = append(schema.Required, name)
-		}
-	}
-
-	return schema
 }
 
 // AddTools registers a slice of Tools with the MCP server.

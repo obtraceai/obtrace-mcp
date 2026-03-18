@@ -276,15 +276,7 @@ func doMutatingRequest(ctx context.Context, cfg *mcpobtrace.ObtraceConfig, metho
 	}
 
 	if resp.StatusCode >= 400 {
-		return &mcp.CallToolResult{
-			IsError: true,
-			Content: []mcp.Content{
-				mcp.TextContent{
-					Type: "text",
-					Text: fmt.Sprintf("HTTP %d: %s", resp.StatusCode, string(respBody)),
-				},
-			},
-		}, nil
+		return mcp.NewToolResultError(fmt.Sprintf("HTTP %d: %s", resp.StatusCode, string(respBody))), nil
 	}
 
 	// Pretty-print JSON if possible
@@ -296,12 +288,5 @@ func doMutatingRequest(ctx context.Context, cfg *mcpobtrace.ObtraceConfig, metho
 		}
 	}
 
-	return &mcp.CallToolResult{
-		Content: []mcp.Content{
-			mcp.TextContent{
-				Type: "text",
-				Text: string(respBody),
-			},
-		},
-	}, nil
+	return mcp.NewToolResultText(string(respBody)), nil
 }

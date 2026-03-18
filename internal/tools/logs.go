@@ -246,15 +246,7 @@ func doGetRequest(ctx context.Context, cfg *mcpobtrace.ObtraceConfig, path strin
 	}
 
 	if resp.StatusCode >= 400 {
-		return &mcp.CallToolResult{
-			IsError: true,
-			Content: []mcp.Content{
-				mcp.TextContent{
-					Type: "text",
-					Text: fmt.Sprintf("HTTP %d: %s", resp.StatusCode, string(body)),
-				},
-			},
-		}, nil
+		return mcp.NewToolResultError(fmt.Sprintf("HTTP %d: %s", resp.StatusCode, string(body))), nil
 	}
 
 	// Pretty-print JSON if possible
@@ -266,12 +258,5 @@ func doGetRequest(ctx context.Context, cfg *mcpobtrace.ObtraceConfig, path strin
 		}
 	}
 
-	return &mcp.CallToolResult{
-		Content: []mcp.Content{
-			mcp.TextContent{
-				Type: "text",
-				Text: string(body),
-			},
-		},
-	}, nil
+	return mcp.NewToolResultText(string(body)), nil
 }
