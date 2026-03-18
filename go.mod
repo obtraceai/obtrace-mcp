@@ -3,7 +3,7 @@ module github.com/obtraceai/obtrace-mcp
 go 1.25.0
 
 require (
-	github.com/mark3labs/mcp-go v0.43.2
+	github.com/mark3labs/mcp-go v0.45.0
 	go.opentelemetry.io/otel v1.42.0
 	go.opentelemetry.io/otel/trace v1.42.0
 )
