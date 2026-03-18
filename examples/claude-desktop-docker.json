@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "obtrace": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "OBTRACE_URL=https://api.obtrace.ai",
+        "-e", "OBTRACE_API_KEY=your-api-key",
+        "ghcr.io/obtraceai/mcp-obtrace:latest",
+        "--transport", "stdio"
+      ]
+    }
+  }
+}

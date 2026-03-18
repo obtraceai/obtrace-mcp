@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  mcp-obtrace:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OBTRACE_URL=${OBTRACE_URL:-http://host.docker.internal:8080}
+      - OBTRACE_API_KEY=${OBTRACE_API_KEY}
+      - OBTRACE_TENANT_ID=${OBTRACE_TENANT_ID}
+      - OBTRACE_PROJECT_ID=${OBTRACE_PROJECT_ID}
+    command: ["--transport", "sse", "--addr", ":8000", "--enable-write"]

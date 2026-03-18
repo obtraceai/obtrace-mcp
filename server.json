@@ -1,0 +1,15 @@
+{
+  "name": "obtrace-mcp",
+  "display_name": "Obtrace MCP Server",
+  "description": "Model Context Protocol server for Obtrace observability platform. Provides LLM access to logs, traces, metrics, dashboards, incidents, alerts, AI analysis, session replay, and more.",
+  "version": "0.1.0",
+  "vendor": "Obtrace AI",
+  "homepage": "https://github.com/obtraceai/obtrace-mcp",
+  "license": "Apache-2.0",
+  "transport": ["stdio", "sse", "streamable-http"],
+  "capabilities": {
+    "tools": true,
+    "resources": false,
+    "prompts": false
+  }
+}

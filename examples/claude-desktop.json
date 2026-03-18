@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "obtrace": {
+      "command": "mcp-obtrace",
+      "env": {
+        "OBTRACE_URL": "https://api.obtrace.ai",
+        "OBTRACE_API_KEY": "your-api-key",
+        "OBTRACE_PROJECT_ID": "your-project-id"
+      }
+    }
+  }
+}

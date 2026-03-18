@@ -1,0 +1,25 @@
+# build outputs
+bin/
+dist/
+build/
+coverage/
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+
+# env and local settings
+.env
+.env.*
+!.env.example
+
+# editor/os
+.DS_Store
+.vscode/
+.idea/

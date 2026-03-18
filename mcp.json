@@ -1,0 +1,21 @@
+{
+  "mcp_version": "1.0",
+  "name": "obtrace-mcp",
+  "description": "MCP context metadata for Obtrace MCP server repository",
+  "resources": [
+    {
+      "id": "readme",
+      "path": "README.md",
+      "description": "Primary MCP server documentation"
+    },
+    {
+      "id": "docs-index",
+      "path": "docs/index.md",
+      "description": "Documentation index"
+    }
+  ],
+  "conventions": {
+    "architecture": "mcp_server_go",
+    "tool_pattern": "typed_struct_handlers"
+  }
+}

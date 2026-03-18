@@ -1,0 +1,61 @@
+version: 2
+
+builds:
+  - id: mcp-obtrace
+    main: ./cmd/mcp-obtrace
+    binary: mcp-obtrace
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.ShortCommit}}
+
+archives:
+  - id: default
+    format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+
+dockers:
+  - image_templates:
+      - "ghcr.io/obtraceai/mcp-obtrace:{{ .Version }}-amd64"
+    goarch: amd64
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+  - image_templates:
+      - "ghcr.io/obtraceai/mcp-obtrace:{{ .Version }}-arm64"
+    goarch: arm64
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/arm64"
+
+docker_manifests:
+  - name_template: "ghcr.io/obtraceai/mcp-obtrace:{{ .Version }}"
+    image_templates:
+      - "ghcr.io/obtraceai/mcp-obtrace:{{ .Version }}-amd64"
+      - "ghcr.io/obtraceai/mcp-obtrace:{{ .Version }}-arm64"
+  - name_template: "ghcr.io/obtraceai/mcp-obtrace:latest"
+    image_templates:
+      - "ghcr.io/obtraceai/mcp-obtrace:{{ .Version }}-amd64"
+      - "ghcr.io/obtraceai/mcp-obtrace:{{ .Version }}-arm64"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^ci:"

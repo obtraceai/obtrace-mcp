@@ -1,0 +1,35 @@
+Obtrace MCP Server
+
+Purpose:
+- MCP (Model Context Protocol) server for the Obtrace observability platform.
+- Exposes Obtrace APIs as MCP tools for LLM agents and IDE integrations.
+- Written in Go, uses github.com/mark3labs/mcp-go SDK.
+
+Transport modes:
+- stdio (default): for CLI/IDE integration
+- sse: Server-Sent Events over HTTP
+- streamable-http: Streamable HTTP transport
+
+Tool categories:
+- logs: query_logs, search_logs, list_log_services, log_stats, log_patterns
+- traces: query_traces, get_trace, search_traces, list_trace_services, list_trace_operations, trace_stats
+- metrics: query_metrics, list_metric_names, get_metric_metadata, list_metric_label_names, list_metric_label_values, metric_stats
+- dashboards: list_dashboards, get_dashboard, get_dashboard_panels, create_dashboard, update_dashboard, delete_dashboard
+- incidents: list_incidents, get_incident, get_incident_timeline, create_incident, update_incident, add_incident_activity
+- alerts: list_alert_rules, get_alert_rule, list_alert_history, list_contact_points, create_alert_rule, update_alert_rule, delete_alert_rule
+- ai: chat_to_query, root_cause_analysis, summarize, autofix
+- projects: list_projects, get_project, list_apps, list_teams, list_users
+- replay: list_replay_sessions, get_replay_session, get_replay_events, get_replay_errors
+- search: global_search, generate_deeplink
+
+Configuration:
+- OBTRACE_URL: Base URL of Obtrace API (required)
+- OBTRACE_API_KEY: API key (required)
+- OBTRACE_TENANT_ID: Tenant ID for scoping
+- OBTRACE_PROJECT_ID: Project ID for scoping
+
+Design constraints:
+- Tools follow typed struct + handler pattern with automatic JSON schema generation.
+- Write/mutating tools gated behind --enable-write flag.
+- Category-based enable/disable via flags.
+- All queries scoped by tenant_id/project_id.
