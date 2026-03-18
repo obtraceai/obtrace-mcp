@@ -147,7 +147,7 @@ func runStdio(ctx context.Context, s *server.MCPServer) error {
 	}
 
 	stdioServer := server.NewStdioServer(s)
-	stdioServer.SetContextFunc(ctxFunc)
+	stdioServer.SetContextFunc(server.StdioContextFunc(ctxFunc))
 
 	return stdioServer.Listen(ctx, os.Stdin, os.Stdout)
 }

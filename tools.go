@@ -56,10 +56,10 @@ func AllCategories() []Category {
 //
 //	func(ctx context.Context, params T) (*mcp.CallToolResult, error)
 func MustTool[T any](name, description string, handler func(ctx context.Context, params T) (*mcp.CallToolResult, error), opts ...mcp.ToolOption) Tool {
-	allOpts := []mcp.ToolOption{mcp.WithInputSchema[T]()}
+	allOpts := []mcp.ToolOption{mcp.WithDescription(description), mcp.WithInputSchema[T]()}
 	allOpts = append(allOpts, opts...)
 
-	tool := mcp.NewTool(name, description, allOpts...)
+	tool := mcp.NewTool(name, allOpts...)
 
 	wrappedHandler := func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		var params T
