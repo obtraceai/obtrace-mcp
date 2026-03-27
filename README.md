@@ -15,7 +15,7 @@ go install github.com/obtraceai/obtrace-mcp/cmd/mcp-obtrace@latest
 ### Docker
 
 ```bash
-docker pull ghcr.io/obtraceai/mcp-obtrace:latest
+docker pull ghcr.io/obtraceai/obtrace-mcp:latest
 ```
 
 ### From source

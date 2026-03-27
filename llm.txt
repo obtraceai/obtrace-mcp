@@ -1,5 +1,11 @@
 Obtrace MCP Server
 
+Install:
+- Binary: go install github.com/obtraceai/obtrace-mcp/cmd/mcp-obtrace@latest
+- Docker: ghcr.io/obtraceai/obtrace-mcp
+
+Source: https://github.com/obtraceai/obtrace-mcp
+
 Purpose:
 - MCP (Model Context Protocol) server for the Obtrace observability platform.
 - Exposes Obtrace APIs as MCP tools for LLM agents and IDE integrations.
@@ -33,3 +39,18 @@ Design constraints:
 - Write/mutating tools gated behind --enable-write flag.
 - Category-based enable/disable via flags.
 - All queries scoped by tenant_id/project_id.
+
+Obtrace SDKs (all repos under github.com/obtraceai/):
+- JS: npm install @obtrace/sdk-js (v1.0.2, ESM+CJS)
+- Browser: npm install @obtrace/sdk-browser (v1.0.1)
+- Go: go get github.com/obtraceai/obtrace-sdk-go (v1.0.0)
+- Python: pip install obtrace-sdk-python (v1.0.0)
+- Java: Maven Central io.obtrace:obtrace-sdk-java:1.0.0
+- .NET: dotnet add package Obtrace.Sdk (NuGet.org)
+- PHP: composer require obtrace/sdk-php (Packagist)
+- Ruby: gem install obtrace-sdk-ruby (RubyGems)
+- K8s: Helm chart via ghcr.io/obtraceai/obtrace-sdk-k8s
+
+Related tools:
+- DB Agent: Docker ghcr.io/obtraceai/db-agent
+- Zero CLI: Docker ghcr.io/obtraceai/obtrace-zero-cli
