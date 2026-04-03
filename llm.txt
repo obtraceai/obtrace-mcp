@@ -34,6 +34,11 @@ Configuration:
 - OBTRACE_TENANT_ID: Tenant ID for scoping
 - OBTRACE_PROJECT_ID: Project ID for scoping
 
+Project app identity:
+- Incident scope, replay scope, and autofix bindings use the canonical app connected in the project.
+- Explicit aliases are normalized to that canonical app during ingest.
+- Raw `service_name` may differ from the canonical app name, so prefer project app names when scoping MCP queries.
+
 Design constraints:
 - Tools follow typed struct + handler pattern with automatic JSON schema generation.
 - Write/mutating tools gated behind --enable-write flag.

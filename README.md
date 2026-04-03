@@ -41,6 +41,12 @@ Set environment variables:
 | `OBTRACE_TLS_CLIENT_KEY` | No | Path to client key (mTLS) |
 | `OBTRACE_TLS_INSECURE` | No | Set to `true` to skip TLS verification |
 
+Project/app identity:
+
+- Incident, replay, and autofix scopes are keyed by the canonical app connected to the project.
+- Explicit app aliases are normalized at ingest time to that canonical app.
+- When filtering incidents or replay sessions, prefer the connected project app name; observed runtime `service_name` may still appear in raw logs and traces.
+
 ## Usage
 
 ### Stdio (CLI / IDE integration)
